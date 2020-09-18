@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package app;
+
+option go_package = "../../pkg/pb;pb";
+
+service AccessTokenService {
+  rpc Get(AccessTokenRequest) returns (AccessTokenResponse);
+}
+
+message AccessTokenRequest {
+  string appId = 1;
+}
+
+message AccessTokenResponse {
+  string token = 1;
+  uint32 expired_at = 2;
+}

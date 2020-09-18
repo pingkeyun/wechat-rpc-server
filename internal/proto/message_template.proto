@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package msgtemplate;
+option go_package = "../../pkg/pb;pb";
+
+service MsgTemplateService {
+  rpc GetTemplateId(GetTemplateIdRequest) returns (GetTemplateIdResponse);
+  rpc GetTemplateList(GetTemplateListRequest) returns (GetTemplateListResponse);
+}
+
+message GetTemplateIdRequest {
+  uint32 authorizer_id = 1;
+  string template_name = 2;
+}
+
+message GetTemplateIdResponse {
+  string template_id = 1;
+}
+
+message TemplateItem {
+  string template_name = 1;
+  string template_id = 2;
+}
+
+message GetTemplateListRequest {
+  uint32 authorizer_id = 1;
+}
+
+message GetTemplateListResponse {
+  repeated TemplateItem results = 1;
+}

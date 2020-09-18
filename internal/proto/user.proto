@@ -1,0 +1,32 @@
+syntax = "proto3";
+package app;
+
+option go_package = "../../pkg/pb;pb";
+
+service UserService {
+  rpc GetUser(GetUserRequest) returns (GetUserResponse);
+}
+
+message GetUserRequest {
+  uint64 UserId = 1;
+}
+
+message User {
+  uint64 userid = 1;
+  string nickname = 2;
+  string realname = 3;
+  string openid = 4;
+  string headimgurl = 5;
+  string mobile = 6;
+  string province = 7;
+  string city = 8;
+  uint32 sex = 9;
+  uint64 subscribe_time = 10;
+  uint32 subscribe = 11;
+  uint32 authorizer_id = 12;
+  string gmt_modified = 13;
+}
+
+message GetUserResponse {
+  User result = 1;
+}

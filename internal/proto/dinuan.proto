@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package app;
+option go_package = "../../pkg/pb;pb";
+
+service DinuanService {
+  rpc GetDeviceIdByStartDate(getDeviceIdByDateRequest) returns (getDeviceIdByDateResponse);
+  rpc GetDeviceIdByEndDate(getDeviceIdByDateRequest) returns (getDeviceIdByDateResponse);
+}
+
+message getDeviceIdByDateRequest {
+  string date = 1;
+}
+message getDeviceIdByDateResponse {
+  repeated uint64 deviceId = 1;
+}
+

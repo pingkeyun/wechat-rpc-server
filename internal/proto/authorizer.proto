@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package app;
+option go_package = "../../pkg/pb;pb";
+
+service AuthorizerService {
+  // 基本信息
+  rpc GetBaseInfo(GetBaseInfoRequest) returns (GetBaseInfoResponse);
+
+  // 授权信息
+  rpc GetAuthorizeInfo(GetAuthorizeInfoRequest) returns (GetAuthorizeInfoResponse);
+}
+
+message GetBaseInfoRequest{
+  uint32 authorizer_id = 1;
+}
+message GetBaseInfoResponse{
+  string authorizer_appid = 1;
+  string authorizer_appname = 2;
+}
+
+message GetAuthorizeInfoRequest{
+  uint32 authorizer_id = 1;
+  string authorizer_appid = 2;
+}
+message GetAuthorizeInfoResponse{
+  uint32 authorizer_id = 1;
+  string authorizer_appid = 2;
+  string nick_name = 3;
+  string head_img = 4;
+  uint32 service_type_info = 5;
+  uint32 verify_type_info = 6;
+  string origin_id = 7;
+  string principal_name = 8;
+  string alias = 9;
+  string bussiness_info = 10;
+  string qrcode_url = 11;
+}

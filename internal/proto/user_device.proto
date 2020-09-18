@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package app;
+
+option go_package = "../../pkg/pb;pb";
+
+service UserDeviceService {
+  rpc Get(GetRequest) returns (GetResponse);
+  rpc GetUserByDeviceId(GetUserByDeviceIdRequest) returns (GetUserByDeviceIdResponse);
+}
+
+message GetRequest {
+  uint64 id = 1;
+}
+
+message GetResponse {
+  Item result = 1;
+}
+
+message GetUserByDeviceIdRequest{
+  uint64 DeviceId = 1;
+}
+message GetUserByDeviceIdResponse{
+  repeated Item results = 1;
+}
+
+enum YN {
+  N = 0;
+  Y = 1;
+}
+message Item {
+  uint64 ID = 1;
+  string CreatedAt = 2;
+  string UpdatedAt = 3;
+  uint64 Userid = 4;
+  string Openid = 5;
+  string Title = 6;
+  uint64 DeviceId = 7;
+  string DeviceNumber = 8;
+  uint32 DeviceType = 9;
+  YN Founder = 10;
+  uint32 AuthorizerId = 11;
+  string ProvinceCode = 12;
+  string CityCode = 13;
+  string CityName = 14;
+  string AreaCode = 15;
+  string AreaName = 16;
+}
