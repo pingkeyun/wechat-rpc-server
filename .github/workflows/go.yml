@@ -33,6 +33,8 @@ jobs:
     - name: Build
       run: go build -o wechat-rpc-server cmd/server/server.go
 
+    - name: Vet
+      run: go vet
     #- name: Test
     #  run: go test -v .
       
