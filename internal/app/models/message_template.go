@@ -16,15 +16,15 @@ func (MessageTemplate) TableName() string {
 }
 
 func (t MessageTemplate) GetTemplateId(authorizerId uint32, templateName string) string {
-	var ret struct{
+	var ret struct {
 		TemplateId string
 	}
-	db.Model(&t).Select("template_id").Where("authorizer_id = ? AND template_name = ?", authorizerId, templateName).Scan(&ret)
+	db.Model(&t).Select("template_id").Where("authorizer_id = ? AND template_name = ? AND state = 1", authorizerId, templateName).Scan(&ret)
 
 	return ret.TemplateId
 }
 
-type MessageTemplateResultItem struct{
+type MessageTemplateResultItem struct {
 	TemplateName, TemplateId string
 }
 
