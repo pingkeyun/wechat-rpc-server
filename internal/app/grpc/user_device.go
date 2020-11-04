@@ -24,7 +24,7 @@ func (a UserDeviceServiceServer) Get(ctx context.Context, r *pb.GetRequest) (*pb
 	}, nil
 }
 
-// GetUserByDeviceId 根据设备号获取所有用户列表
+// GetUserByDeviceId 根据设备ID获取所有用户列表
 func (a UserDeviceServiceServer) GetUserByDeviceId(ctx context.Context, r *pb.GetUserByDeviceIdRequest) (*pb.GetUserByDeviceIdResponse, error) {
 	user := models.UserDevice{}
 	result := user.GetUserByDeviceId(r.GetDeviceId())
@@ -39,10 +39,25 @@ func (a UserDeviceServiceServer) GetUserByDeviceId(ctx context.Context, r *pb.Ge
 	}, nil
 }
 
+// GetUserByDeviceNumber 根据设备号获取所有用户列表
+func (a UserDeviceServiceServer) GetUserByDeviceNumber(ctx context.Context, r *pb.GetUserByDeviceNumberRequest) (*pb.GetUserByDeviceNumberResponse, error) {
+	user := models.UserDevice{}
+	result := user.GetUserByDeviceNumber(r.GetDeviceNumber())
+
+	var ret []*pb.Item
+	for _, item := range result {
+		ret = append(ret, a.ItemToPbItem(item))
+	}
+
+	return &pb.GetUserByDeviceNumberResponse{
+		Results: ret,
+	}, nil
+}
+
 // PbItemToStructItem 将model数据类型转换为pb数据类型
 func (a UserDeviceServiceServer) ItemToPbItem(item models.UserDevice) *pb.Item {
-	var founder pb.YN
-	founder = 0
+	// var founder pb.YN
+	// founder = 0
 
 	return &pb.Item{
 		ID:           item.ID,
@@ -54,7 +69,7 @@ func (a UserDeviceServiceServer) ItemToPbItem(item models.UserDevice) *pb.Item {
 		DeviceId:     item.DeviceId,
 		DeviceNumber: item.DeviceNumber,
 		DeviceType:   uint32(item.DeviceType),
-		Founder:      founder,
+		Founder:      pb.YN(item.Founder),
 		AuthorizerId: item.AuthorizerId,
 		ProvinceCode: item.ProvinceCode,
 		CityCode:     item.CityCode,

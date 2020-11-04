@@ -7,6 +7,7 @@ option go_package = "../../pkg/pb;pb";
 service UserDeviceService {
   rpc Get(GetRequest) returns (GetResponse);
   rpc GetUserByDeviceId(GetUserByDeviceIdRequest) returns (GetUserByDeviceIdResponse);
+  rpc GetUserByDeviceNumber(GetUserByDeviceNumberRequest) returns (GetUserByDeviceNumberResponse);
 }
 
 message GetRequest {
@@ -17,10 +18,17 @@ message GetResponse {
   Item result = 1;
 }
 
-message GetUserByDeviceIdRequest{
+message GetUserByDeviceIdRequest {
   uint64 DeviceId = 1;
 }
-message GetUserByDeviceIdResponse{
+message GetUserByDeviceNumberRequest {
+  string DeviceNumber = 1;
+}
+
+message GetUserByDeviceIdResponse {
+  repeated Item results = 1;
+}
+message GetUserByDeviceNumberResponse {
   repeated Item results = 1;
 }
 

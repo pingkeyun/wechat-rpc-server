@@ -2,9 +2,10 @@ package app
 
 import (
 	"errors"
-	"github.com/levigross/grequests"
 	"log"
 	"strconv"
+
+	"github.com/levigross/grequests"
 )
 
 const URL = "https://pt.pingkeyun.com/api/authorizer/accesstoken"
@@ -39,7 +40,6 @@ func GetAccessToken(appId string) (*Result, error) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	if r.Errcode == 1 {
 		return r, errors.New(r.Errmsg)
 	}

@@ -49,4 +49,25 @@ func Setup() {
 		IdleTimeout: cfg.GetDuration("redis.IdleTimeout"),
 	}
 
+	// Queue
+	QueueBaseConfig = &QueueBase{
+		Host: cfg.GetString("queue.Host"),
+		Port: cfg.GetString("queue.Port"),
+		User: cfg.GetString("queue.User"),
+		Password: cfg.GetString("queue.Password"),
+	}
+
+	// Rabbitmq
+	QueueRabbitMqConfig = &QueueRabbitMq{
+		QueueBase: QueueBase{
+			Host: cfg.GetString("queue.Host"),
+			Port: cfg.GetString("queue.Port"),
+			User: cfg.GetString("queue.User"),
+			Password: cfg.GetString("queue.Password"),
+		},
+		Vhost: cfg.GetString("rabbitmq.Vhost"),
+		Exchange: cfg.GetString("rabbitmq.Exchange"),
+		Queue: cfg.GetString("rabbitmq.Queue"),
+		RoutingKey: cfg.GetString("rabbitmq.RoutingKey"),
+	}
 }

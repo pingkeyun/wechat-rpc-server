@@ -4,20 +4,24 @@ import (
 	"strconv"
 	"sync"
 	"time"
+
+	"github.com/prometheus/common/log"
 )
 
+// AccessTokenItem 令牌结构
 type AccessTokenItem struct {
 	AccessToken string
 	ExpiredAt   time.Time
 }
 
-// 令牌过期
+// IsExpired 令牌过期
 func (ac AccessTokenItem) IsExpired() bool {
 	return time.Now().After(ac.ExpiredAt)
 }
 
 var singletonServer *Server
 
+// Server AccessToken专用服务
 type Server struct {
 	mu   sync.Mutex
 	data map[string]AccessTokenItem
@@ -25,6 +29,7 @@ type Server struct {
 
 var once sync.Once
 
+// NewServer 服务
 func NewServer() *Server {
 	once.Do(func() {
 		singletonServer = &Server{
@@ -35,39 +40,50 @@ func NewServer() *Server {
 	return singletonServer
 }
 
-// Get 获取token项
-func (s *Server) GetItem(appId string) (AccessTokenItem, bool) {
+// GetItem 获取token项
+func (s *Server) GetItem(appID string) (AccessTokenItem, bool) {
 	s.mu.Lock()
-	defer s.mu.Unlock()
 
-	ac, ok := s.data[appId]
+	ac, ok := s.data[appID]
 	if ok && !ac.IsExpired() {
+		s.mu.Unlock()
 		return ac, ok
 	}
 
-	s.refresh(appId)
-	ac, ok = s.data[appId]
+	if err := s.refresh(appID); err != nil {
+		log.Error(err, appID)
+		ac, ok = AccessTokenItem{
+			AccessToken: "",
+			ExpiredAt:   time.Now(),
+		}, true
+	} else {
+		ac, ok = s.data[appID]
+	}
+
+	s.mu.Unlock()
 
 	return ac, ok
 }
 
 // refresh 刷新token
-func (s *Server) refresh(appId string) {
-	result, err := GetAccessToken(appId)
+func (s *Server) refresh(appID string) error {
+	result, err := GetAccessToken(appID)
 	if err != nil {
-		return
+		return err
 	}
 
 	t, _ := strconv.ParseInt(result.Data["expired_at"].(string), 10, 32)
-	s.data[appId] = AccessTokenItem{
+	s.data[appID] = AccessTokenItem{
 		AccessToken: result.Data["access_token"].(string),
 		ExpiredAt:   time.Unix(t, 0),
 	}
+
+	return nil
 }
 
 // GetAccessToken 远程获取api接口
-func (s *Server) GetAccessToken(appId string) string {
-	ac, ok := s.GetItem(appId)
+func (s *Server) GetAccessToken(appID string) string {
+	ac, ok := s.GetItem(appID)
 	if ok {
 		return ac.AccessToken
 	}

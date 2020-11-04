@@ -9,6 +9,10 @@ import (
 
 	"google.golang.org/grpc"
 
+	"net/http"
+
+	_ "net/http/pprof"
+
 	rpcsrv "github.com/pingkeyun/wechat-rpc-server/internal/app/grpc"
 	"github.com/pingkeyun/wechat-rpc-server/pkg/pb"
 )
@@ -16,6 +20,7 @@ import (
 const PORT = "6001"
 
 func main() {
+	go http.ListenAndServe("0.0.0.0:6060", nil)
 
 	// db
 	config.Setup()
@@ -40,6 +45,9 @@ func main() {
 
 	// authorizer
 	pb.RegisterAuthorizerServiceServer(grpcServer, rpcsrv.AuthorizerServiceServer{})
+
+	// WechatPush
+	pb.RegisterWechatPushServiceServer(grpcServer, rpcsrv.WechatPushServiceServer{})
 
 	listen, err := net.Listen("tcp", ":"+PORT)
 	if err != nil {
