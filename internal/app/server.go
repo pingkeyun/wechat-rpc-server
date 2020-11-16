@@ -4,8 +4,6 @@ import (
 	"strconv"
 	"sync"
 	"time"
-
-	"github.com/prometheus/common/log"
 )
 
 // AccessTokenItem 令牌结构
@@ -51,7 +49,6 @@ func (s *Server) GetItem(appID string) (AccessTokenItem, bool) {
 	}
 
 	if err := s.refresh(appID); err != nil {
-		log.Error(err, appID)
 		ac, ok = AccessTokenItem{
 			AccessToken: "",
 			ExpiredAt:   time.Now(),
